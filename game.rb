@@ -1,5 +1,4 @@
 class Game
-  attr_accessor :winner
 
   def initialize
 
@@ -33,8 +32,12 @@ class Game
     "P1: #{lives_1}/3 vs P2: #{lives_2}/3"
   end
 
+  def get_other_player(current_player)
+    current_player + 1 % 2
+  end
+
   def start
-    while !winner
+    while !@winner
       puts "#{@players[@current_player].name}: #{@question.question_string}"
       player_input = gets.chomp!
 
@@ -45,7 +48,7 @@ class Game
         @players[@current_player].decrement_lives
 
         if @players[@current_player].lives == 0
-          @winner = @players[0]
+          @winner = @players[get_other_player(@current_player)]
         end
       end
 
@@ -54,6 +57,9 @@ class Game
       change_question
       
       puts score(@players[0].lives, @players[1].lives)
+      if @winner
+        puts "#{@winner.name} wins with a score of #{@winner.lives}/3"
+      end
       puts seperator(@winner)
     end
   end
