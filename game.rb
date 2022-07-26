@@ -19,6 +19,7 @@ class Game
   end
 
   def seperator(winner)
+    # Return 'new turn' seperator if there is no winner, return 'game over' seperator otherwise
     if !winner
       string = '----- NEW TURN -----'
     else
@@ -33,20 +34,26 @@ class Game
   end
 
   def get_other_player(current_player)
+    # Return index of the non-current player
     current_player + 1 % 2
   end
 
   def start
-    while !@winner
+
+    while !@winner # Run game while there is no winner
+
+      # Print question and retrieve user answer
       puts "#{@players[@current_player].name}: #{@question.question_string}"
       player_input = gets.chomp!
 
+      # Validate answer
       if player_input == @question.sum.to_s
         puts "#{@players[@current_player].name}: YES! You are correct."
       else
         puts "#{@players[@current_player].name}: Seriously? No!"
         @players[@current_player].decrement_lives
 
+        # Set winner to non-current player if current player has run out of lives
         if @players[@current_player].lives == 0
           @winner = @players[get_other_player(@current_player)]
         end
@@ -56,11 +63,15 @@ class Game
       change_current_player
       change_question
       
+      # Print score
       puts score(@players[0].lives, @players[1].lives)
+
+      # Print winner if winner is declared, seperator if no winner declared
       if @winner
         puts "#{@winner.name} wins with a score of #{@winner.lives}/3"
       end
       puts seperator(@winner)
+      
     end
   end
 
